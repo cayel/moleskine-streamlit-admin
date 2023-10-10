@@ -32,27 +32,28 @@ with st.sidebar:
 if selected_menu == 'Concerts':
     df_filtered_concerts = load_concerts(selected_user_id)
 
-    # Affichez le nombre d'enregistrements dans un widget Streamlit
-    st.write(f"Nombre d'enregistrements dans la table 'concerts': {len(df_filtered_concerts)}")    
+    if not df_filtered_concerts is None : 
+        # Histogramme du nombre de concerts par année
+        if not df_filtered_concerts.empty:
+            # Affichez le nombre d'enregistrements dans un widget Streamlit
+            st.write(f"Nombre d'enregistrements dans la table 'concerts': {len(df_filtered_concerts)}")    
 
-    # Histogramme du nombre de concerts par année
-    if not df_filtered_concerts.empty:
-        display_concerts_by_year(df_filtered_concerts)
-        display_top_venues(df_filtered_concerts)    
-        display_top_artists(df_filtered_concerts)
-    else:
-        st.write('Aucun concert trouvé pour cette utilisateur.')
+            display_concerts_by_year(df_filtered_concerts)
+            display_top_venues(df_filtered_concerts)    
+            display_top_artists(df_filtered_concerts)
+        else:
+            st.write('Aucun concert trouvé pour cette utilisateur.')
 elif selected_menu == 'Livres':       
     df_filtered_books = load_books(selected_user_id)
+    if not df_filtered_books is None:
+        if not df_filtered_books.empty :
+            # Affichez le nombre d'enregistrements dans un widget Streamlit
+            st.write(f"Nombre d'enregistrements dans la table 'livres': {len(df_filtered_books)}")    
 
-    # Affichez le nombre d'enregistrements dans un widget Streamlit
-    st.write(f"Nombre d'enregistrements dans la table 'livres': {len(df_filtered_books)}")    
-
-    # Histogramme du nombre de livres par année
-    if not df_filtered_books.empty:
-        display_books_by_year(df_filtered_books)
-    else:
-        st.write('Aucun livre trouvé pour cette utilisateur.')
+            # Histogramme du nombre de livres par année
+            display_books_by_year(df_filtered_books)
+        else:
+            st.write('Aucun livre trouvé pour cet utilisateur.')
 else:
     st.write('Autre menu')
     
