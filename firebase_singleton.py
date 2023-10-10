@@ -17,6 +17,6 @@ class FirebaseSingleton:
 		        "token_uri" : st.secrets.token_uri
 	        })
             firebase_admin.initialize_app(cred,{
-		        "database_url": st.secrets.databaseURL
+		        "database_url": st.secrets.database_url
 		    })
         return cls._instance
