@@ -4,7 +4,6 @@ import sqlite3
 from data_processing_concert import display_top_artists
 from data_processing_concert import display_top_venues
 from data_processing_concert import display_concerts_by_year
-from data_processing_book import display_books_by_year
 from load_concerts import load_concerts
 from load_books import load_books
 from select_user import select_user
@@ -92,11 +91,35 @@ elif selected_menu == 'Livres':
     df_filtered_books = load_books(selected_user_id)
     if not df_filtered_books is None:
         if not df_filtered_books.empty :
-            # Affichez le nombre d'enregistrements dans un widget Streamlit
-            st.write(f"Nombre d'enregistrements dans la table 'livres': {len(df_filtered_books)}")    
+            st.header('Répartition des lectures par année', divider='blue')
+            grouped_by_year = df_filtered_books.groupby('annee')
+            count_per_year = grouped_by_year.size().reset_index()
+            st.bar_chart(count_per_year, x="annee");
+        
+            col1, col2 = st.columns(2)
 
-            # Histogramme du nombre de livres par année
-            display_books_by_year(df_filtered_books)
+            writer_counts = df_filtered_books['writer'].value_counts()
+            top_10_writers = writer_counts.head(10).sort_values(ascending=False)
+            top_10_writers = top_10_writers.sort_values(ascending=False)
+            with col1 : 
+                st.header("Les plus lus", divider='blue')
+                st.table(top_10_writers)
+
+            author_counts = df_filtered_books['writer'].value_counts()
+            df_filtered_books_rating = df_filtered_books[df_filtered_books['writer'].isin(author_counts[author_counts >= 3].index)]
+            writer_ratings = df_filtered_books_rating.groupby('writer')['rating'].mean()
+            writer_ratings = writer_ratings.round(2)
+            print(writer_ratings)
+            top_10_writers = writer_ratings.nlargest(10)
+            with col2 : 
+                st.header("Les mieux notés", divider='blue')
+                st.table(top_10_writers)
+
+            recent_books = df_filtered_books.sort_values(by='date', ascending=False)
+            top_10_recent_books = recent_books.head(10)
+            selected_columns = top_10_recent_books[['writer', 'title']]
+            st.header("Les 10 dernières lectures", divider='blue')
+            st.table(selected_columns)
         else:
             st.write('Aucun livre trouvé pour cet utilisateur.')
 else:
