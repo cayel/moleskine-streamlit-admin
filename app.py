@@ -79,12 +79,34 @@ elif selected_menu == 'Concerts':
     if not df_filtered_concerts is None : 
         # Histogramme du nombre de concerts par année
         if not df_filtered_concerts.empty:
-            # Affichez le nombre d'enregistrements dans un widget Streamlit
-            st.write(f"Nombre d'enregistrements dans la table 'concerts': {len(df_filtered_concerts)}")    
+            st.header('Répartition des concerts par année', divider='blue')
+            grouped_by_year = df_filtered_concerts.groupby('annee')
+            count_per_year = grouped_by_year.size().reset_index()
+            st.bar_chart(count_per_year, x="annee");
 
-            display_concerts_by_year(df_filtered_concerts)
-            display_top_venues(df_filtered_concerts)    
-            display_top_artists(df_filtered_concerts)
+            col1, col2 = st.columns(2)
+
+            artist_counts = df_filtered_concerts['mainArtist'].value_counts()
+            top_10_artists = artist_counts.head(10).sort_values(ascending=False)
+            top_10_artists = top_10_artists.sort_values(ascending=False)
+            with col1 : 
+                st.header("Les plus vus", divider='blue')
+                st.table(top_10_artists)
+
+            venue_counts = df_filtered_concerts['venue'].value_counts()
+            top_10_venues = venue_counts.head(10).sort_values(ascending=False)
+            top_10_venues = top_10_venues.sort_values(ascending=False)
+            with col2 : 
+                st.header("Lieux préférés", divider='blue')
+                st.table(top_10_venues)
+
+            recent_concerts = df_filtered_concerts.sort_values(by='date', ascending=False)
+            top_10_recent_concerts = recent_concerts.head(10)
+            selected_columns = top_10_recent_concerts[['mainArtist']]
+            st.header("Les 10 derniers concerts", divider='blue')
+            st.table(selected_columns)
+            #display_top_venues(df_filtered_concerts)    
+            #display_top_artists(df_filtered_concerts)
         else:
             st.write('Aucun concert trouvé pour cette utilisateur.')
 elif selected_menu == 'Livres':       
