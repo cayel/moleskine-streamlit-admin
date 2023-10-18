@@ -75,7 +75,9 @@ if selected_menu == 'Accueil':
     col3.metric(label="Films", value=0)    
 elif selected_menu == 'Concerts':
     df_filtered_concerts = load_concerts(selected_user_id)
-
+    df_filtered_concerts['allArtists'] = df_filtered_concerts['mainArtist'] + '+' + df_filtered_concerts['otherArtist']
+    df_filtered_concerts['allArtists'] = df_filtered_concerts['allArtists'].str.rstrip('+')
+    
     if not df_filtered_concerts is None : 
         # Histogramme du nombre de concerts par année
         if not df_filtered_concerts.empty:
@@ -85,26 +87,25 @@ elif selected_menu == 'Concerts':
             st.bar_chart(count_per_year, x="annee");
 
             col1, col2 = st.columns(2)
-
-            artist_counts = df_filtered_concerts['mainArtist'].value_counts()
-            top_10_artists = artist_counts.head(10).sort_values(ascending=False)
-            top_10_artists = top_10_artists.sort_values(ascending=False)
+            print(df_filtered_concerts)
+            all_artists = df_filtered_concerts['allArtists'].str.split('+').explode()
+            top_10_artists = all_artists.value_counts().head(10)
             with col1 : 
                 st.header("Les plus vus", divider='blue')
-                st.table(top_10_artists)
-
+                st.dataframe(top_10_artists)
+                
             venue_counts = df_filtered_concerts['venue'].value_counts()
             top_10_venues = venue_counts.head(10).sort_values(ascending=False)
             top_10_venues = top_10_venues.sort_values(ascending=False)
             with col2 : 
                 st.header("Lieux préférés", divider='blue')
-                st.table(top_10_venues)
+                st.dataframe(top_10_venues)
 
             recent_concerts = df_filtered_concerts.sort_values(by='date', ascending=False)
             top_10_recent_concerts = recent_concerts.head(10)
             selected_columns = top_10_recent_concerts[['mainArtist']]
             st.header("Les 10 derniers concerts", divider='blue')
-            st.table(selected_columns)
+            st.dataframe(selected_columns)
             #display_top_venues(df_filtered_concerts)    
             #display_top_artists(df_filtered_concerts)
         else:
