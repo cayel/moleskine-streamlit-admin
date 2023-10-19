@@ -199,9 +199,19 @@ elif selected_menu == 'Films':
 
             recent_movies = df_filtered_movies.sort_values(by='date', ascending=False)
             top_10_recent_movies = recent_movies.head(10)
-            selected_columns = top_10_recent_movies[['director', 'title']]
+            selected_columns = top_10_recent_movies[['director', 'title','cinema']]
             st.header("Les 10 derniers films vus", divider='blue')
-            st.table(selected_columns)
+            st.dataframe(selected_columns,    
+                column_config={
+                    "director": "Réalisateur",
+                    "title": "Titre",
+                    "cinema": st.column_config.CheckboxColumn(
+                        "Cinéma ?",
+                        help="Vu au cinéma ou à la télévision",
+                        default=False,
+                        )
+                },
+            hide_index=True,)
         else:
             st.write('Aucun film trouvé pour cet utilisateur.')
 else:
