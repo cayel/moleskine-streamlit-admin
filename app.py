@@ -11,6 +11,7 @@ from select_user import select_user
 from streamlit_option_menu import option_menu
 from movies_list import movies_list
 import datetime
+from books_page import books_page
 
 # Le reste de votre code Streamlit
 st.title('Moleskine')
@@ -134,39 +135,7 @@ elif selected_menu == 'Concerts':
         else:
             st.write('Aucun concert trouvé pour cette utilisateur.')
 elif selected_menu == 'Livres':       
-    df_filtered_books = load_books(selected_user_id)
-    if not df_filtered_books is None:
-        if not df_filtered_books.empty :
-            st.header('Répartition des lectures par année', divider='blue')
-            grouped_by_year = df_filtered_books.groupby('annee')
-            count_per_year = grouped_by_year.size().reset_index()
-            st.bar_chart(count_per_year, x="annee");
-        
-            col1, col2 = st.columns(2)
-
-            writer_counts = df_filtered_books['writer'].value_counts()
-            top_10_writers = writer_counts.head(10).sort_values(ascending=False)
-            top_10_writers = top_10_writers.sort_values(ascending=False)
-            with col1 : 
-                st.header("Les plus lus", divider='blue')
-                st.table(top_10_writers)
-
-            author_counts = df_filtered_books['writer'].value_counts()
-            df_filtered_books_rating = df_filtered_books[df_filtered_books['writer'].isin(author_counts[author_counts >= 3].index)]
-            writer_ratings = df_filtered_books_rating.groupby('writer')['rating'].mean()
-            writer_ratings = writer_ratings.round(2)
-            top_10_writers = writer_ratings.nlargest(10)
-            with col2 : 
-                st.header("Les mieux notés", divider='blue')
-                st.table(top_10_writers)
-
-            recent_books = df_filtered_books.sort_values(by='date', ascending=False)
-            top_10_recent_books = recent_books.head(10)
-            selected_columns = top_10_recent_books[['writer', 'title']]
-            st.header("Les 10 dernières lectures", divider='blue')
-            st.table(selected_columns)
-        else:
-            st.write('Aucun livre trouvé pour cet utilisateur.')
+    books_page(selected_user_id)
 elif selected_menu == 'Films':       
     df_filtered_movies = load_movies(selected_user_id)
     if not df_filtered_movies is None:

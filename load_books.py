@@ -12,7 +12,7 @@ def load_books(selected_user_id):
         books_query = "SELECT * FROM books WHERE utilisateur_id = ?"
         filtered_books = cursor.execute(books_query, (selected_user_id,)).fetchall()
 
-        df_filtered_books = pd.DataFrame(filtered_books, columns=['id', 'utilisateur_id', 'writer', 'title', 'rating', 'date'])
+        df_filtered_books = pd.DataFrame(filtered_books, columns=['id', 'utilisateur_id', 'writer', 'title', 'rating', 'date', 'imageUrl'])
         if not df_filtered_books.empty:    
             # Convertissez la date en secondes (division par 1000)
             df_filtered_books['date'] = df_filtered_books['date'] / 1000

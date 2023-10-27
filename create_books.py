@@ -23,7 +23,8 @@ def create_books():
             writer TEXT,
             title TEXT,
             rating INTEGER,
-            date DATE
+            date DATE,
+            imageUrl TEXT
         )
     ''')
     conn.commit()
@@ -39,11 +40,12 @@ def create_books():
                 title = book_data.get('title', 'Inconnu')
                 rating = book_data.get('rating', 'Inconnu')
                 date = book_data.get('date', 'Inconnu')
+                imageUrl = book_data.get('imageUrl','')
                 # Insérez la commande dans la table SQLite des commandes
                 cursor.execute('''
-                    INSERT INTO books (id, utilisateur_id, writer, title, date, rating)
-                    VALUES (?, ?, ?, ?, ?, ?)
-                ''', (book_id,utilisateur_id, writer, title, date, rating))
+                    INSERT INTO books (id, utilisateur_id, writer, title, date, rating, imageUrl)
+                    VALUES (?, ?, ?, ?, ?, ?, ?)
+                ''', (book_id,utilisateur_id, writer, title, date, rating, imageUrl))
                 conn.commit()
         conn.close()
     else:
