@@ -14,7 +14,6 @@ def create_movies():
             DROP TABLE IF EXISTS movies
     ''')
     conn.commit()
-    print('before creation')
 
     # Créez la table des films
     cursor.execute('''
