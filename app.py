@@ -6,6 +6,7 @@ from books_page import books_page
 from concerts_page import concerts_page
 from movies_page import movies_page
 from dashboard_page import dashboard_page
+from admin_page import admin_page
 
 st.title('Moleskine')
 
@@ -23,8 +24,8 @@ if st.sidebar.button("Rafraîchir les données"):
     create_movies()
 
 with st.sidebar:
-    selected_menu = option_menu("Menu principal", ["Accueil", 'Concerts', 'Livres', 'Films'], 
-        icons=['house','music-note', 'book', 'film'], menu_icon="journal-richtext", default_index=0)
+    selected_menu = option_menu("Menu principal", ["Accueil", 'Concerts', 'Livres', 'Films', 'Administration'], 
+        icons=['house','music-note', 'book', 'film','box'], menu_icon="journal-richtext", default_index=0)
     
 if selected_menu == 'Accueil':
     dashboard_page(selected_user_id)
@@ -34,6 +35,8 @@ elif selected_menu == 'Livres':
     books_page(selected_user_id)
 elif selected_menu == 'Films':       
     movies_page(selected_user_id)
+elif selected_menu == 'Administration':       
+    admin_page(selected_user_id)
 
 
 
