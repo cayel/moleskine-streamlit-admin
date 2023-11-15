@@ -11,7 +11,7 @@ def load_concerts(selected_user_id):
         concerts_query = "SELECT * FROM concerts WHERE utilisateur_id = ?"
         filtered_concerts = cursor.execute(concerts_query, (selected_user_id,)).fetchall()
 
-        df_filtered_concerts = pd.DataFrame(filtered_concerts, columns=['id', 'utilisateur_id', 'mainArtist', 'otherArtist', 'venue', 'rating', 'date'])
+        df_filtered_concerts = pd.DataFrame(filtered_concerts, columns=['id', 'utilisateur_id', 'mainArtist', 'otherArtist', 'venue', 'rating', 'date', 'comment'])
         if not df_filtered_concerts.empty:    
             # Convertissez la date en secondes (division par 1000)
             df_filtered_concerts['date'] = df_filtered_concerts['date'] / 1000

@@ -24,7 +24,8 @@ def create_concerts():
             otherArtist TEXT,
             venue TEXT,
             rating INTEGER,
-            date DATE
+            date DATE,
+            comment TEXT
         )
     ''')
     conn.commit()
@@ -41,11 +42,12 @@ def create_concerts():
                 venue = concert_data.get('venue', 'Inconnu')
                 rating = concert_data.get('rating', 'Inconnu')
                 date = concert_data.get('date', 'Inconnu')
+                comment = concert_data.get('comment', '')
                 # Insérez la commande dans la table SQLite des commandes
                 cursor.execute('''
-                    INSERT INTO concerts (id, utilisateur_id, mainArtist, otherArtist, date, venue, rating)
-                    VALUES (?, ?, ?, ?, ?, ?, ?)
-                ''', (concert_id,utilisateur_id, mainArtist, otherArtist, date, venue, rating))
+                    INSERT INTO concerts (id, utilisateur_id, mainArtist, otherArtist, date, venue, rating, comment)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                ''', (concert_id,utilisateur_id, mainArtist, otherArtist, date, venue, rating, comment))
                 conn.commit()
         conn.close()
     else:
