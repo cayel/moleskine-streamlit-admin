@@ -2,6 +2,36 @@ import sqlite3
 import pandas as pd
 import datetime
 import os
+from firebase_admin import db
+
+def load_concerts_from_firebase(user_id):
+    from firebase_singleton import FirebaseSingleton  
+    ref = db.reference('concerts')
+    data = ref.get()
+    concerts_data = []
+    
+    if data:
+        for utilisateur_id, utilisateur_data in data.items():
+            if (user_id == utilisateur_id) :
+                for concert_id, concert_data in utilisateur_data.items():
+                    mainArtist = concert_data.get('mainArtist', 'Inconnu')
+                    otherArtist = concert_data.get('otherArtist', 'Inconnu')
+                    venue = concert_data.get('venue', 'Inconnu')
+                    rating = concert_data.get('rating', 'Inconnu')
+                    date = concert_data.get('date', 'Inconnu')
+                    comment = concert_data.get('comment', '')
+                    concerts_data.append({
+                        'utiisateur_id': utilisateur_id,
+                        'concert_id': concert_id,
+                        'mainArtist': mainArtist,
+                        'otherArtist': otherArtist,
+                        'venue': venue,
+                        'rating': rating,
+                        'date': date,
+                        'comment': comment
+                    })
+        concerts_df = pd.DataFrame(concerts_data)
+        return concerts_df
 
 def load_concerts(selected_user_id):
     if os.path.exists('moleskine.db'):
